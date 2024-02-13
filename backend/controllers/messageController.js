@@ -59,7 +59,7 @@ exports.sendMessage = async (req,res) =>{
 
         return res.status(500).json({
             sucess:false,
-            message:"error in sendMessage controller"
+            error:"error in sendMessage controller"
         })
     }
 }

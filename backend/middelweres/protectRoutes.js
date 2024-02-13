@@ -3,9 +3,10 @@ const User = require("../models/userModel");
 const JWT_SECRET = 'jijigijijt';
 
 
-exports. protectRoute = async (req,res,next) =>{
+exports.protectRoute = async (req,res,next) =>{
     try {
         const token = req.cookies.jwt;
+        
 
         if(!token){
             return res.status(401).json({

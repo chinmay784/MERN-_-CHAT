@@ -1,16 +1,18 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
+const jwt = require("jsonwebtoken")
+const JWT_SECRET = 'jijigijijt';
 
 exports.signup = async (req,res) =>{
     try {
         const {fullName ,userName, password,confrimpassword,gender} = req.body;
 
 
-        if(!fullName ,!userName,!password ,!gender){
+        if(!fullName || !userName || !password || !gender){
             return res.status(400).json({
                 sucess:false,
-                message:"Please provide all details"
+                error:"Please provide all details"
             })
         }
 
@@ -18,7 +20,7 @@ exports.signup = async (req,res) =>{
         if(password !== confrimpassword){
             return res.status(400).json({
                 sucess:false,
-                message:"password and confrimpassword not match"
+                error:"password and confrimpassword not match"
             })
         }
 
@@ -28,7 +30,7 @@ exports.signup = async (req,res) =>{
         if(user){
             return res.status(400).json({
                 sucess:false,
-                message:"user already exist"  
+                error:"user already exist"  
             })
         }
 
@@ -36,10 +38,15 @@ exports.signup = async (req,res) =>{
         const hashedPassword = await bcrypt.hash(password, 10);
 		// console.log(hashedPassword);
 		console.log("hellllooo")
+        
+        // https://avatar.iran.liara.run/public/boy
+
+        // const boyProfilepic = `https://avatar.iran.run/public/boy/username${userName}`;
+        // const girlprofilepic = `https://avatar.iran.run/public/girl/username${userName}`;
 
 
-        const boyProfilepic = `https://avatar.iran.run/public/boy/username${userName}`;
-        const girlprofilepic = `https://avatar.iran.run/public/girl/username${userName}`;
+        const boyProfilepic = `https://avatar.iran.liara.run/public/boy`;
+        const girlprofilepic = `https://avatar.iran.liara.run/public/girl`;
 
 
         const newUser = new User({
@@ -67,7 +74,7 @@ exports.signup = async (req,res) =>{
         }else{
             return res.status(400).json({
                 sucess:false,
-                message:"Invalid User Data"  
+                error:"Invalid User Data"  
             })
         }
 
@@ -87,40 +94,43 @@ exports.signup = async (req,res) =>{
 exports.login = async (req,res) =>{
     try {
         const {userName,password} = req.body;
+        console.log(userName)
 
-        if(!userName ,!password){
+        if(!userName || !password){
             return res.status(400).json({
                 sucess:false,
-                message:"provide all filds"
+                error:"provide all filds"
             })
         }
 
         const user = await User.findOne({userName});
+        console.log(user,"fhgdfjghfdjghfd")
 
         const isPasswordCorrect = await bcrypt.compare(password,user?.password || "");
 
 
-        if(!user , !isPasswordCorrect){
+        if(!user || !isPasswordCorrect){
             return res.status(400).json({
                 sucess:false,
-                message:"Invalid UserName or Password"
+                error:"Invalid UserName or Password"
             })
         }
 
 
-        generateToken(user._id,res);
-
-        res.status(200).json({
-            _id:user._id,
-            fullName:user.fullName,
-            userName:user.userName,
-            profilepic:user.profilepic,
-            sucess:true,
-            message:"User login Sucessfully"
-        })
-
+        generateToken(user._id,res)
 
         
+
+        if(user){
+            return res.status(200).json({
+                _id:user._id,
+                fullName:user.fullName,
+                userName:user.userName,
+                profilepic:user.profilepic,
+                sucess:true,
+                message:"User login Sucessfully"
+            })
+        }        
     } catch (error) {
         console.log("error in login controller",error.message);
 
@@ -150,7 +160,7 @@ exports.logout = async (req,res) =>{
 
         return res.status(500).json({
             sucess:false,
-            message:"error in logout controller"
+            error:"error in logout controller"
         })
     }
 }

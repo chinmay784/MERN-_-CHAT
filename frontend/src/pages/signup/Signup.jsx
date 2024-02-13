@@ -1,7 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import GenderCheckBox from './GenderCheckBox'
+import { Link } from 'react-router-dom'
+import useSignup from '../../hooks/useSignup';
 
 const Signup = () => {
+
+
+  const [input, setInput] = useState({
+    fullName : "",
+    userName : "",
+    password : "",
+    confrimpassword : "",
+    gender : "",
+  });
+
+  const {loading,signup} = useSignup()
+
+  const checkboxChange = (gender) =>{
+    setInput({...input,gender})
+  }
+
+
+  const handleSubmit = async (e) =>{
+    e.preventDefault();
+    await signup(input)
+  }
+
+
   return (
     <div className=' flex flex-col justify-center items-center min-w-96 mx-auto '>
 
@@ -14,14 +39,16 @@ const Signup = () => {
 
 
 
-      <form>
+      <form onSubmit={handleSubmit}>
 
         <div className=' mt-4'>
           <label className=' label p-2'>
             <span className=' text-base label-text'>Full Name</span>
           </label>
 
-          <input type=' text' placeholder='Enter fullname' className=' w-full input input-bordered h-10'/>
+          <input type=' text' placeholder='Enter fullname' className=' w-full input input-bordered h-10' value={input.fullName}
+           onChange={ (e) =>setInput({...input,fullName:e.target.value})}
+          />
         </div>
 
         <div className=' mt-4'>
@@ -29,7 +56,9 @@ const Signup = () => {
             <span className=' text-base label-text'>User Name</span>
           </label>
 
-          <input type=' text' placeholder='Enter username' className=' w-full input input-bordered h-10'/>
+          <input type=' text' placeholder='Enter username' className=' w-full input input-bordered h-10' value={input.userName} 
+            onChange={(e) =>setInput({...input,userName:e.target.value})}
+          />
         </div>
 
 
@@ -38,7 +67,9 @@ const Signup = () => {
             <span className=' text-base label-text'>Password</span>
           </label>
 
-          <input type=' password' placeholder='Enter fullname' className=' w-full input input-bordered h-10'/>
+          <input type='password' placeholder='Enter password' className=' w-full input input-bordered h-10' value={input.password}
+           onChange={(e) => setInput({...input,password:e.target.value})}
+           />
         </div>
 
         <div className=' mt-4'>
@@ -46,20 +77,24 @@ const Signup = () => {
             <span className=' text-base label-text'>Confrim Password</span>
           </label>
 
-          <input type=' password' placeholder='Enter fullname' className=' w-full input input-bordered h-10'/>
+          <input type='password' placeholder='Enter confrimpassword' className=' w-full input input-bordered h-10' value={input.confrimpassword}
+          onChange={(e) =>setInput({...input,confrimpassword:e.target.value})}
+          />
         </div>
 
 
 
-        <GenderCheckBox />
+        <GenderCheckBox onCheckboxChange = {checkboxChange} selectedGender={input.gender} />
 
 
-        <a href='#' className=' text-sm hover:underline hover: text-blue-600 mt-4 inline-block'>Already have an account?</a>
+        <Link to="/login" className=' text-sm hover:underline hover: text-blue-600 mt-4 inline-block'>Already have an account?</Link>
 
 
 
         <div>
-          <button className=' btn btn-block btn-sm mt-2 border-slate-700'>sign up</button>
+          <button className=' btn btn-block btn-sm mt-2 border-slate-700' disabled={loading}>
+            { loading ? <span className=' loading loading-spinner'></span> : "Sign Up"}
+          </button>
         </div>
 
 
