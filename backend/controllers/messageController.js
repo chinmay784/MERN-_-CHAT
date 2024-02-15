@@ -51,8 +51,9 @@ exports.sendMessage = async (req,res) =>{
         const reciverSockedId = getReciversocketId(reciverId);
         
 
-        if( reciverSockedId ){
+        if(reciverSockedId){
             io.to(reciverSockedId).emit("newMessage",newMessage)
+            console.log( io.to(reciverSockedId).emit("newMessage",newMessage))
         }
 
         console.log(reciverSockedId)
