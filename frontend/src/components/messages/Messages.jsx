@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import Message from './Message'
 import useGetMessage from '../../hooks/useGetMessage'
 import MessageSkeletone from '../../skeletone/MessageSkeletone';
+import useListenMessages from '../../hooks/useListenMessages';
 
 const Messages = () => {
 
@@ -9,6 +10,9 @@ const Messages = () => {
   const {messages,loading} = useGetMessage();
   console.log(messages);
   const lastMessageRef = useRef()
+
+  useListenMessages()
+
 
   useEffect( () =>{
     setTimeout(() => {

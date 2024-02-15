@@ -18,7 +18,9 @@ const Message = ({message}) => {
 
   const bubleColor = fromMe ? "bg-blue-500" : ""
 
-  const formatedDate= extractTime(message.createdAt)
+  const formatedDate= extractTime(message.createdAt);
+
+  const shackClass =  message.shouldShake ? "shake" : ""
 
 
   return (
@@ -29,7 +31,7 @@ const Message = ({message}) => {
             </div>
         </div>
 
-        <div className={` chat-bubble text-white ${bubleColor} pb-2`}>{message.message}</div>
+        <div className={` chat-bubble text-white ${bubleColor} ${shackClass}pb-2`}>{message.message}</div>
         <div className={` chat-footer opacity-50 text-xs flex gap-1 items-center`}>{formatedDate}</div>
     </div>
   )
