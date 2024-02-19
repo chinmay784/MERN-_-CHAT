@@ -11,14 +11,11 @@ require("dotenv").config();
 const port = process.env.PORT || 4000;
 
 
-// const __dirname = path.resolve()
+
 
 
 app.use(express.json());
 app.use(cookieparser());
-
-
-
 
 
 
